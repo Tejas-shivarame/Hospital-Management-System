@@ -30,6 +30,10 @@ urlpatterns = [
 
     # Versioned app APIs
     path("api/v1/accounts/", include("apps.accounts.urls")),
+    path("api/v1/core/", include("apps.core.urls")),
+    path("api/v1/patients/", include("apps.patients.urls")),
+
+
 ]
 
 # if settings.DEBUG:

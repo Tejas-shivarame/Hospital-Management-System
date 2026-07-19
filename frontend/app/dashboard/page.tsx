@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const { user, isLoadingUser, logout } = useAuth();
+  const isAdmin = user?.role === "super_admin" || user?.role === "hospital_admin";
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
@@ -41,8 +43,43 @@ export default function DashboardPage() {
         </dl>
       )}
 
+      {isAdmin && (
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/dashboard/admin/hospitals">
+            <Button variant="outline" className="w-auto px-5">Manage hospitals</Button>
+          </Link>
+          <Link href="/dashboard/admin/staff">
+            <Button variant="outline" className="w-auto px-5">Assign staff</Button>
+          </Link>
+          <Link href="/dashboard/patients">
+            <Button variant="outline" className="w-auto px-5">Patient records</Button>
+          </Link>
+        </div>
+      )}
+
+      {["doctor", "nurse", "receptionist", "lab_technician", "pharmacist", "accountant"].includes(user?.role ?? "") && (
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/dashboard/patients">
+            <Button variant="outline" className="w-auto px-5">Patient records</Button>
+          </Link>
+          {(user?.role === "receptionist" || user?.role === "nurse") && (
+            <Link href="/dashboard/patients/register">
+              <Button variant="outline" className="w-auto px-5">Register patient</Button>
+            </Link>
+          )}
+        </div>
+      )}
+
+      {user?.role === "patient" && (
+        <div className="mt-8 flex gap-3">
+          <Link href="/dashboard/my-profile">
+            <Button variant="outline" className="w-auto px-5">My profile & documents</Button>
+          </Link>
+        </div>
+      )}
+
       <p className="mt-8 text-sm text-muted">
-        This is a placeholder — Module 2 (Patient Management) will build out the real dashboard.
+        This is a placeholder — Module 4 (Doctor Management) will build out the real dashboard.
       </p>
     </div>
   );

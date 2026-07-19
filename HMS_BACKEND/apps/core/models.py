@@ -93,6 +93,41 @@ class Branch(SoftDeleteModel):
         return f"{self.hospital.name} — {self.name}"
 
 
+class Department(SoftDeleteModel):
+    """
+    A clinical/administrative department (Cardiology, Radiology, ICU, ...),
+    scoped to a specific Branch. Staff (doctors, nurses, etc.) and future
+    modules (Appointments, Wards) hang off this.
+    """
+
+    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE, related_name="departments")
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="departments")
+    name = models.CharField(max_length=150)
+    code = models.CharField(max_length=20)
+    description = models.TextField(blank=True)
+    head_of_department = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="headed_departments",
+        limit_choices_to={"role": "doctor"},
+    )
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = "core_department"
+        unique_together = [("branch", "code")]
+        ordering = ["hospital", "branch", "name"]
+
+    def __str__(self):
+        return f"{self.branch.name} — {self.name}"
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if self.branch_id and self.hospital_id and self.branch.hospital_id != self.hospital_id:
+            raise ValidationError("Branch must belong to the selected hospital.")
+
 class AuditLog(models.Model):
     """Immutable audit trail — who did what, when, from where."""
 
