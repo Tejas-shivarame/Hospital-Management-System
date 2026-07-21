@@ -54,13 +54,19 @@ export default function DashboardPage() {
           <Link href="/dashboard/patients">
             <Button variant="outline" className="w-auto px-5">Patient records</Button>
           </Link>
+          <Link href="/dashboard/doctors">
+            <Button variant="outline" className="w-auto px-5">Doctors</Button>
+          </Link>
         </div>
       )}
 
-      {["doctor", "nurse", "receptionist", "lab_technician", "pharmacist", "accountant"].includes(user?.role ?? "") && (
+      {["nurse", "receptionist", "lab_technician", "pharmacist", "accountant"].includes(user?.role ?? "") && (
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/dashboard/patients">
             <Button variant="outline" className="w-auto px-5">Patient records</Button>
+          </Link>
+          <Link href="/dashboard/doctors">
+            <Button variant="outline" className="w-auto px-5">Doctors</Button>
           </Link>
           {(user?.role === "receptionist" || user?.role === "nurse") && (
             <Link href="/dashboard/patients/register">
@@ -70,16 +76,30 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {user?.role === "doctor" && (
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/dashboard/patients">
+            <Button variant="outline" className="w-auto px-5">Patient records</Button>
+          </Link>
+          <Link href="/dashboard/my-availability">
+            <Button variant="outline" className="w-auto px-5">My availability</Button>
+          </Link>
+        </div>
+      )}
+
       {user?.role === "patient" && (
-        <div className="mt-8 flex gap-3">
+        <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/dashboard/my-profile">
             <Button variant="outline" className="w-auto px-5">My profile & documents</Button>
+          </Link>
+          <Link href="/dashboard/doctors">
+            <Button variant="outline" className="w-auto px-5">Find a doctor</Button>
           </Link>
         </div>
       )}
 
       <p className="mt-8 text-sm text-muted">
-        This is a placeholder — Module 4 (Doctor Management) will build out the real dashboard.
+        This is a placeholder — Module 5 (Appointment Scheduling) will build out the real dashboard.
       </p>
     </div>
   );

@@ -50,11 +50,13 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "django_celery_beat",
+    "django_extensions",
 
     # local apps
     "apps.core",
     "apps.accounts",
-    "apps.patients"
+    "apps.patients",
+    "apps.doctors"
 ]
 
 MIDDLEWARE = [
